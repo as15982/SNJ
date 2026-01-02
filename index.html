@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>auntiesMetal 姐妹情誼大鑑定</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #FFF9F5; }
+        .quiz-card { border-radius: 2.5rem; background: white; box-shadow: 0 25px 50px -12px rgba(255, 115, 0, 0.1); }
+        .btn-option { transition: all 0.2s; border-radius: 1.5rem; }
+        .btn-option:active { transform: scale(0.95); }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-md quiz-card overflow-hidden border-4 border-white relative">
+        <!-- JS 注入內容 -->
+    </div>
+
+    <script>
+        const questions = [
+            { q: "1. 考古紀錄：auntiesMetal 群組正式創立於哪一天？", o: ["2018/5/12", "2019/1/1", "2018/12/31"], a: 0, h: "那是 2018 年的一個溫馨週六傍晚。" },
+            { q: "2. 創立當天，誰是第一個被邀請並成功加入的「二號成員」？", o: ["Nora Tsao", "家家 (Jia)", "阿簡"], a: 1, h: "18:54 邀請，18:56 就入坑了，反應超快！" },
+            { q: "3. 群組創立不到半小時，誰是第一個手刀「建立相簿」的人？", o: ["Nora Tsao", "家家 (Jia)", "SOPHiE SU"], a: 2, h: "19:22 就建立了相簿，效率驚人。" },
+            { q: "4. 【家家專屬題】家家喊出「諾諾帶我們飛(?」，那個括號問號代表？", o: ["真心的崇拜", "吐槽式的幽默調侃", "她手滑打錯字"], a: 1, h: "這是家家經典的網路用語風格。" },
+            { q: "5. 【Nora專屬題】Nora 想要表達「我很累」時，最可能的發訊風格是？", o: ["一次發完長文", "「我」「現在」「很累」三連噴發", "只發語音訊息"], a: 1, h: "這就是 Nora 獨有的「噴發式斷句流」。" },
+            { q: "6. 【SOPHiE專屬題】SOPHiE 看到豆奶照片評論「一副就是『你在說甚麼』」，這是形容？", o: ["貓咪對人類的鄙視", "貓咪肚子餓", "貓咪想出去玩"], a: 0, h: "SOPHiE 是豆奶心靈的遠端翻譯官。" },
+            { q: "7. Nora 在 23:27 宣告「還沒 11 點半已經睡了 3 次」，SOPHiE 的反應是？", o: ["大笑並給出生理合理解釋", "叫她去看醫生", "冷漠不回覆"], a: 0, h: "「吃飽飽暖暖的就會想睡了」是 SOPHiE 的金句。" },
+            { q: "8. 關於「阿簡」（簡哥），他在群組裡的地位通常是？", o: ["主要的垃圾話來源", "SOPHiE 故事中的背景家屬", "群組的最高管理員"], a: 1, h: "簡哥是這群女生對話中的神祕常客。" },
+            { q: "9. Nora 的「搞笑手滑」：想打「皮克敏」卻可能打成？", o: ["屁克敏", "皮皮蝦", "皮克吐"], a: 0, h: "找一個最帶有「氣味」與「調侃」的字。" },
+            { q: "10. 被誇獎「跟美女一樣」後，Nora 回覆了哪種靈魂台味用語？", o: ["真假", "哪有啦", "蝦米"], a: 2, h: "這兩個字完美捕捉了驚訝的瞬間。" },
+            { q: "11. 豆奶被封為「穴道師」的根本原因是？", o: ["她懂推拿", "她每一腳都精準踩在 Nora 身上", "名字聽起來很專業"], a: 1, h: "Nora 親口認證：「她每一腳都踩在穴道上」。" },
+            { q: "12. SOPHiE 稱呼豆奶為穴道師後，補上的靈魂笑聲是？", o: ["(˶‾᷄ ⁻ ‾᷅˵)", "XDDDDDD", "喵..."], a: 1, h: "SOPHiE 的快樂就是這麼簡單大聲。" },
+            { q: "13. 在 17:46 那連噴的訊息中，Nora 揭露了什麼震撼情報？", o: ["她要結婚了", "蔡依林有玩皮克敏", "簡哥要請客"], a: 1, h: "這消息把當天的大家全炸出來了。" },
+            { q: "14. 家家 (Jia) 喊出的「出運啦～～」波浪號共有幾個？", o: ["1 個", "2 個", "3 個"], a: 1, h: "紀錄顯示是「出運啦～～」，精簡有力。" },
+            { q: "15. 如果有人在群組打錯字，誰最會第一個跳出來狂笑？", o: ["SOPHiE", "豆奶", "家家"], a: 0, h: "身為大笑擔當，絕對不會放過任何笑點。" },
+            { q: "16. auntiesMetal 創立至今，這段友誼大約維持了多久？", o: ["3 年", "5 年", "超過 7 年"], a: 2, h: "從 2018 到現在，真的是骨灰級。" },
+            { q: "17. Nora 的貼圖習慣通常代表什麼？", o: ["她生氣了", "她情緒充沛但懶得打字", "她手機沒電"], a: 1, h: "貼圖是 Nora 最強大的情緒武器。" },
+            { q: "18. 家家說「諾諾帶我們飛(?」，這個「飛」意指？", o: ["去旅行", "在遊戲中凱旋", "真的在空中飛"], a: 1, h: "這是在皮克敏話題之後的幽默期待。" },
+            { q: "19. 2018/5/12 創立當晚最熱絡的話題圍繞在？", o: ["貓咪與被壓慘況", "明天的早餐", "蔡依林"], a: 0, h: "這段「被壓」的情緣竟然維持了七年。" },
+            { q: "20. 通過這 20 題，代表妳在 auntiesMetal 的地位是？", o: ["見習阿姨", "骨灰級靈魂伴侶", "路過的皮克敏"], a: 1, h: "這是一題鑑定「姐妹愛」的終極確認。" }
+        ];
+
+        let state = { step: 'landing', currentQ: 0, score: 0, nickname: '', selected: null, showAnswer: false };
+
+        function render() {
+            const app = document.getElementById('app');
+            if (state.step === 'landing') {
+                app.innerHTML = `
+                    <div class="p-10 text-center fade-in">
+                        <div class="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl">🐱</div>
+                        <h1 class="text-3xl font-black mb-1 text-slate-800 italic">auntiesMetal</h1>
+                        <p class="text-orange-400 font-bold text-xs mb-10 tracking-[0.2em] uppercase">核心成員 20 題鑑定</p>
+                        <div class="space-y-3 mb-10">
+                            ${['SOPHiE', 'Nora', '家家 (Jia)'].map(name => `
+                                <button onclick="startQuiz('${name}')" class="w-full py-5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-3xl font-black transition-all active:scale-95 border border-orange-100 shadow-sm">${name}</button>
+                            `).join('')}
+                        </div>
+                        <div class="text-[10px] text-slate-300 font-bold uppercase tracking-widest">✨ 姊 妹 專 屬 ✨</div>
+                    </div>
+                `;
+            } else if (state.step === 'quiz') {
+                const q = questions[state.currentQ];
+                app.innerHTML = `
+                    <div class="fade-in">
+                        <div class="bg-orange-50 p-6 flex justify-between items-center border-b border-orange-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">⭐</span>
+                                <span class="text-xl font-black">${state.currentQ + 1}<span class="text-xs text-orange-200">/20</span></span>
+                            </div>
+                            <div class="text-right text-orange-500 font-black">Score: ${state.score}</div>
+                        </div>
+                        <div class="p-8">
+                            <h2 class="text-lg font-bold mb-8 text-slate-800 leading-snug h-20 flex items-center">${q.q}</h2>
+                            <div class="space-y-4">
+                                ${q.o.map((opt, i) => {
+                                    let cls = "w-full p-5 rounded-2xl border-2 font-black text-left transition-all text-sm ";
+                                    if (!state.showAnswer) cls += "bg-white border-slate-50 hover:border-orange-200";
+                                    else {
+                                        if (i === q.a) cls += "bg-green-50 border-green-500 text-green-700";
+                                        else if (i === state.selected) cls += "bg-red-50 border-red-500 text-red-700";
+                                        else cls += "bg-slate-50 border-slate-50 opacity-40";
+                                    }
+                                    return `<button onclick="selectOption(${i})" ${state.showAnswer ? 'disabled' : ''} class="${cls}">${opt}</button>`;
+                                }).join('')}
+                            </div>
+                            ${state.showAnswer ? `
+                                <div class="mt-8 fade-in">
+                                    <div class="bg-orange-50/50 p-4 rounded-2xl mb-6 text-[10px] text-orange-600 font-bold italic">“ ${q.h} ”</div>
+                                    <button onclick="nextQ()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black shadow-lg active:scale-95 transition-all">
+                                        ${state.currentQ === questions.length - 1 ? "看鑑定結果" : "下一題 ➔"}
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            } else if (state.step === 'result') {
+                const pct = Math.round((state.score/20)*100);
+                let msg = pct === 100 ? "【完美骨灰級】天啊！妳是 auntiesMetal 的守護神！妳簡直住在群組紀錄裡。" : 
+                          pct >= 75 ? "【超級資深級】超強！妳對這段友誼的垃圾話掌握度極高。" :
+                          pct >= 50 ? "【半夢半醒級】還可以啦！但可能妳最近比較常像 Nora 一樣睡過頭喔！" :
+                          "【臥底懷疑級】哎呀... 妳是不是最近太忙了？快去重讀一遍聊天紀錄！";
+                
+                app.innerHTML = `
+                    <div class="p-10 text-center fade-in">
+                        <div class="text-5xl mb-6">🏆</div>
+                        <h2 class="text-3xl font-black mb-1">鑑定完畢 ✨</h2>
+                        <p class="text-slate-400 text-xs font-bold mb-10">${state.nickname} 的姐妹情誼純度</p>
+                        <div class="text-8xl font-black text-orange-500 mb-10">${pct}<span class="text-xl text-slate-300 ml-1">%</span></div>
+                        <div class="bg-slate-50 p-6 rounded-3xl text-left mb-10 text-sm font-bold text-slate-600 leading-relaxed shadow-inner border border-slate-100">
+                            ${msg}
+                        </div>
+                        <button onclick="reset()" class="w-full bg-orange-500 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-orange-600 active:scale-95 transition-all">再測一次</button>
+                    </div>
+                `;
+            }
+        }
+
+        window.startQuiz = (name) => { state.nickname = name; state.step = 'quiz'; render(); };
+        window.selectOption = (i) => { state.selected = i; state.showAnswer = true; if(i === questions[state.currentQ].a) state.score++; render(); };
+        window.nextQ = () => { if(state.currentQ < questions.length - 1) { state.currentQ++; state.selected = null; state.showAnswer = false; } else { state.step = 'result'; } render(); };
+        window.reset = () => { state = { step: 'landing', currentQ: 0, score: 0, nickname: '', selected: null, showAnswer: false }; render(); };
+        render();
+    </script>
+</body>
+</html>
