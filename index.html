@@ -1,131 +1,331 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>auntiesMetal 姐妹情誼大鑑定</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #FFF9F5; }
-        .quiz-card { border-radius: 2.5rem; background: white; box-shadow: 0 25px 50px -12px rgba(255, 115, 0, 0.1); }
-        .btn-option { transition: all 0.2s; border-radius: 1.5rem; }
-        .btn-option:active { transform: scale(0.95); }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>auntiesMetal 姐妹情誼大鑑定</title>
+    <style>
+        /* 全域重置，防止手機跑版 */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #FFF9F5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            color: #444;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(255, 141, 92, 0.1);
+        }
+
+        /* 頂部標題區樣式 */
+        .header {
+            background: linear-gradient(135deg, #FF9A76 0%, #FF8D5C 100%);
+            padding: 35px 20px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            font-style: italic;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+
+        /* 內容容器 */
+        .main-content {
+            padding: 30px 20px;
+            flex-grow: 1;
+        }
+
+        .progress-indicator {
+            font-size: 12px;
+            color: #FF8D5C;
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* 按鈕格式與顏色設定 */
+        .btn-option {
+            display: block;
+            width: 100%;
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            background-color: #FFFFFF;
+            border: 2px solid #F0F0F0;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        /* 點擊時的顏色反饋 */
+        .btn-option:active {
+            background-color: #FFF5F0;
+            transform: scale(0.98);
+        }
+
+        .btn-option.is-correct {
+            background-color: #E6F9F1 !important;
+            border-color: #2ECC71 !important;
+            color: #27AE60 !important;
+        }
+
+        .btn-option.is-wrong {
+            background-color: #FFF0F0 !important;
+            border-color: #FF7675 !important;
+            color: #D63031 !important;
+        }
+
+        /* 考古提示框 */
+        .history-hint {
+            background-color: #FFF8F0;
+            border-left: 5px solid #FFAD76;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #A3522D;
+            animation: slideUp 0.4s ease;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: 800;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 首頁與結果頁 */
+        .view-center {
+            text-align: center;
+            padding: 60px 25px;
+        }
+
+        .btn-identity {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 15px;
+            background-color: #FFF;
+            border: 2px solid #FFAD76;
+            border-radius: 50px;
+            color: #E67E22;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-identity:active {
+            background-color: #FFAD76;
+            color: white;
+        }
+
+        .score-big {
+            font-size: 90px;
+            font-weight: 900;
+            color: #FF8D5C;
+            margin: 20px 0;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <div id="app" class="w-full max-w-md quiz-card overflow-hidden border-4 border-white relative">
-        <!-- JS 注入內容 -->
-    </div>
+<div id="app-container">
+    <!-- 登入畫面 -->
+    <div id="page-start" class="view-center">
+        <div style="font-size: 80px; margin-bottom: 20px;">🐱</div>
+        <h1 style="font-size: 36px; font-weight: 900; color: #333; font-style: italic; margin-bottom: 5px;">auntiesMetal</h1>
+        <p style="color: #FF8D5C; font-weight: bold; letter-spacing: 4px; margin-bottom: 60px;">姐妹情誼 25 題鑑定</p>
+        
+        <p style="font-size: 14px; color: #999; margin-bottom: 25px;">請選擇身分進入測驗</p>
+        <button class="btn-identity" onclick="start('SOPHiE')">我是 SOPHiE</button>
+        <button class="btn-identity" onclick="start('Nora')">我是 Nora</button>
+        <button class="btn-identity" onclick="start('家家 (Jia)')">我是 家家 (Jia)</button>
+    </div>
 
-    <script>
-        const questions = [
-            { q: "1. 考古紀錄：auntiesMetal 群組正式創立於哪一天？", o: ["2018/5/12", "2019/1/1", "2018/12/31"], a: 0, h: "那是 2018 年的一個溫馨週六傍晚。" },
-            { q: "2. 創立當天，誰是第一個被邀請並成功加入的「二號成員」？", o: ["Nora Tsao", "家家 (Jia)", "阿簡"], a: 1, h: "18:54 邀請，18:56 就入坑了，反應超快！" },
-            { q: "3. 群組創立不到半小時，誰是第一個手刀「建立相簿」的人？", o: ["Nora Tsao", "家家 (Jia)", "SOPHiE SU"], a: 2, h: "19:22 就建立了相簿，效率驚人。" },
-            { q: "4. 【家家專屬題】家家喊出「諾諾帶我們飛(?」，那個括號問號代表？", o: ["真心的崇拜", "吐槽式的幽默調侃", "她手滑打錯字"], a: 1, h: "這是家家經典的網路用語風格。" },
-            { q: "5. 【Nora專屬題】Nora 想要表達「我很累」時，最可能的發訊風格是？", o: ["一次發完長文", "「我」「現在」「很累」三連噴發", "只發語音訊息"], a: 1, h: "這就是 Nora 獨有的「噴發式斷句流」。" },
-            { q: "6. 【SOPHiE專屬題】SOPHiE 看到豆奶照片評論「一副就是『你在說甚麼』」，這是形容？", o: ["貓咪對人類的鄙視", "貓咪肚子餓", "貓咪想出去玩"], a: 0, h: "SOPHiE 是豆奶心靈的遠端翻譯官。" },
-            { q: "7. Nora 在 23:27 宣告「還沒 11 點半已經睡了 3 次」，SOPHiE 的反應是？", o: ["大笑並給出生理合理解釋", "叫她去看醫生", "冷漠不回覆"], a: 0, h: "「吃飽飽暖暖的就會想睡了」是 SOPHiE 的金句。" },
-            { q: "8. 關於「阿簡」（簡哥），他在群組裡的地位通常是？", o: ["主要的垃圾話來源", "SOPHiE 故事中的背景家屬", "群組的最高管理員"], a: 1, h: "簡哥是這群女生對話中的神祕常客。" },
-            { q: "9. Nora 的「搞笑手滑」：想打「皮克敏」卻可能打成？", o: ["屁克敏", "皮皮蝦", "皮克吐"], a: 0, h: "找一個最帶有「氣味」與「調侃」的字。" },
-            { q: "10. 被誇獎「跟美女一樣」後，Nora 回覆了哪種靈魂台味用語？", o: ["真假", "哪有啦", "蝦米"], a: 2, h: "這兩個字完美捕捉了驚訝的瞬間。" },
-            { q: "11. 豆奶被封為「穴道師」的根本原因是？", o: ["她懂推拿", "她每一腳都精準踩在 Nora 身上", "名字聽起來很專業"], a: 1, h: "Nora 親口認證：「她每一腳都踩在穴道上」。" },
-            { q: "12. SOPHiE 稱呼豆奶為穴道師後，補上的靈魂笑聲是？", o: ["(˶‾᷄ ⁻ ‾᷅˵)", "XDDDDDD", "喵..."], a: 1, h: "SOPHiE 的快樂就是這麼簡單大聲。" },
-            { q: "13. 在 17:46 那連噴的訊息中，Nora 揭露了什麼震撼情報？", o: ["她要結婚了", "蔡依林有玩皮克敏", "簡哥要請客"], a: 1, h: "這消息把當天的大家全炸出來了。" },
-            { q: "14. 家家 (Jia) 喊出的「出運啦～～」波浪號共有幾個？", o: ["1 個", "2 個", "3 個"], a: 1, h: "紀錄顯示是「出運啦～～」，精簡有力。" },
-            { q: "15. 如果有人在群組打錯字，誰最會第一個跳出來狂笑？", o: ["SOPHiE", "豆奶", "家家"], a: 0, h: "身為大笑擔當，絕對不會放過任何笑點。" },
-            { q: "16. auntiesMetal 創立至今，這段友誼大約維持了多久？", o: ["3 年", "5 年", "超過 7 年"], a: 2, h: "從 2018 到現在，真的是骨灰級。" },
-            { q: "17. Nora 的貼圖習慣通常代表什麼？", o: ["她生氣了", "她情緒充沛但懶得打字", "她手機沒電"], a: 1, h: "貼圖是 Nora 最強大的情緒武器。" },
-            { q: "18. 家家說「諾諾帶我們飛(?」，這個「飛」意指？", o: ["去旅行", "在遊戲中凱旋", "真的在空中飛"], a: 1, h: "這是在皮克敏話題之後的幽默期待。" },
-            { q: "19. 2018/5/12 創立當晚最熱絡的話題圍繞在？", o: ["貓咪與被壓慘況", "明天的早餐", "蔡依林"], a: 0, h: "這段「被壓」的情緣竟然維持了七年。" },
-            { q: "20. 通過這 20 題，代表妳在 auntiesMetal 的地位是？", o: ["見習阿姨", "骨灰級靈魂伴侶", "路過的皮克敏"], a: 1, h: "這是一題鑑定「姐妹愛」的終極確認。" }
-        ];
+    <!-- 測驗內容 -->
+    <div id="page-quiz" style="display: none; flex-grow: 1; flex-direction: column;">
+        <div class="header">
+            <p id="id-label">AUNTIES METAL</p>
+            <h1>姐妹鑑定中</h1>
+        </div>
+        <div class="main-content">
+            <span id="q-progress" class="progress-indicator">第 1 題 / 共 25 題</span>
+            <div id="q-title" class="question-text">題目載入中...</div>
+            <div id="options-box"></div>
+            
+            <div id="result-feedback" style="display: none;">
+                <div id="q-hint" class="history-hint"></div>
+                <button class="btn-next" onclick="goNext()">下一題 ➔</button>
+            </div>
+        </div>
+    </div>
 
-        let state = { step: 'landing', currentQ: 0, score: 0, nickname: '', selected: null, showAnswer: false };
+    <!-- 結果頁面 -->
+    <div id="page-result" class="view-center" style="display: none;">
+        <div style="font-size: 70px;">🎖️</div>
+        <h2 style="font-weight: 900; margin-top: 15px; font-size: 24px;">妳的鑑定結果</h2>
+        <div id="score-text" class="score-big">0%</div>
+        <div id="comment-box" style="background:#F9F9F9; padding:25px; border-radius:24px; font-weight:bold; line-height:1.7; color:#555; font-size: 15px;"></div>
+        <button class="btn-next" style="margin-top:40px; background:#FF8D5C;" onclick="location.reload()">不服氣？重新測驗</button>
+    </div>
+</div>
 
-        function render() {
-            const app = document.getElementById('app');
-            if (state.step === 'landing') {
-                app.innerHTML = `
-                    <div class="p-10 text-center fade-in">
-                        <div class="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl">🐱</div>
-                        <h1 class="text-3xl font-black mb-1 text-slate-800 italic">auntiesMetal</h1>
-                        <p class="text-orange-400 font-bold text-xs mb-10 tracking-[0.2em] uppercase">核心成員 20 題鑑定</p>
-                        <div class="space-y-3 mb-10">
-                            ${['SOPHiE', 'Nora', '家家 (Jia)'].map(name => `
-                                <button onclick="startQuiz('${name}')" class="w-full py-5 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-3xl font-black transition-all active:scale-95 border border-orange-100 shadow-sm">${name}</button>
-                            `).join('')}
-                        </div>
-                        <div class="text-[10px] text-slate-300 font-bold uppercase tracking-widest">✨ 姊 妹 專 屬 ✨</div>
-                    </div>
-                `;
-            } else if (state.step === 'quiz') {
-                const q = questions[state.currentQ];
-                app.innerHTML = `
-                    <div class="fade-in">
-                        <div class="bg-orange-50 p-6 flex justify-between items-center border-b border-orange-100">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xl">⭐</span>
-                                <span class="text-xl font-black">${state.currentQ + 1}<span class="text-xs text-orange-200">/20</span></span>
-                            </div>
-                            <div class="text-right text-orange-500 font-black">Score: ${state.score}</div>
-                        </div>
-                        <div class="p-8">
-                            <h2 class="text-lg font-bold mb-8 text-slate-800 leading-snug h-20 flex items-center">${q.q}</h2>
-                            <div class="space-y-4">
-                                ${q.o.map((opt, i) => {
-                                    let cls = "w-full p-5 rounded-2xl border-2 font-black text-left transition-all text-sm ";
-                                    if (!state.showAnswer) cls += "bg-white border-slate-50 hover:border-orange-200";
-                                    else {
-                                        if (i === q.a) cls += "bg-green-50 border-green-500 text-green-700";
-                                        else if (i === state.selected) cls += "bg-red-50 border-red-500 text-red-700";
-                                        else cls += "bg-slate-50 border-slate-50 opacity-40";
-                                    }
-                                    return `<button onclick="selectOption(${i})" ${state.showAnswer ? 'disabled' : ''} class="${cls}">${opt}</button>`;
-                                }).join('')}
-                            </div>
-                            ${state.showAnswer ? `
-                                <div class="mt-8 fade-in">
-                                    <div class="bg-orange-50/50 p-4 rounded-2xl mb-6 text-[10px] text-orange-600 font-bold italic">“ ${q.h} ”</div>
-                                    <button onclick="nextQ()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black shadow-lg active:scale-95 transition-all">
-                                        ${state.currentQ === questions.length - 1 ? "看鑑定結果" : "下一題 ➔"}
-                                    </button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            } else if (state.step === 'result') {
-                const pct = Math.round((state.score/20)*100);
-                let msg = pct === 100 ? "【完美骨灰級】天啊！妳是 auntiesMetal 的守護神！妳簡直住在群組紀錄裡。" : 
-                          pct >= 75 ? "【超級資深級】超強！妳對這段友誼的垃圾話掌握度極高。" :
-                          pct >= 50 ? "【半夢半醒級】還可以啦！但可能妳最近比較常像 Nora 一樣睡過頭喔！" :
-                          "【臥底懷疑級】哎呀... 妳是不是最近太忙了？快去重讀一遍聊天紀錄！";
-                
-                app.innerHTML = `
-                    <div class="p-10 text-center fade-in">
-                        <div class="text-5xl mb-6">🏆</div>
-                        <h2 class="text-3xl font-black mb-1">鑑定完畢 ✨</h2>
-                        <p class="text-slate-400 text-xs font-bold mb-10">${state.nickname} 的姐妹情誼純度</p>
-                        <div class="text-8xl font-black text-orange-500 mb-10">${pct}<span class="text-xl text-slate-300 ml-1">%</span></div>
-                        <div class="bg-slate-50 p-6 rounded-3xl text-left mb-10 text-sm font-bold text-slate-600 leading-relaxed shadow-inner border border-slate-100">
-                            ${msg}
-                        </div>
-                        <button onclick="reset()" class="w-full bg-orange-500 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-orange-600 active:scale-95 transition-all">再測一次</button>
-                    </div>
-                `;
-            }
-        }
+<script>
+    const questions = [
+        { q: "1. 考古紀錄：auntiesMetal 群組正式創立於哪一天？", o: ["2018/5/12", "2019/1/1", "2018/12/31"], a: 0, h: "2018/5/12 週六 18:54，SOPHiE 創立了這個傳奇群組。" },
+        { q: "2. 創立當天，誰是第一個被邀請並成功加入的「二號成員」？", o: ["Nora Tsao", "家家 (Jia)", "阿簡"], a: 1, h: "家家在 18:56 加入，反應速度極快！" },
+        { q: "3. 群組創立不到半小時，誰是第一個手刀「建立相簿」的人？", o: ["Nora Tsao", "家家 (Jia)", "SOPHiE SU"], a: 2, h: "SOPHiE 在 19:22 就建立了相簿，效率滿分。" },
+        { q: "4. 【家家專屬題】家家喊出「諾諾帶我們飛(?」，那個括號問號代表？", o: ["真心的崇拜", "吐槽式的幽默調侃", "她手滑打錯字"], a: 1, h: "這是家家經典的調侃問號，代表「妳確定要帶我們飛？」" },
+        { q: "5. 【Nora專屬題】Nora 想要表達「我很累」時，最可能的發訊風格是？", o: ["一次發完長文", "「我」「現在」「很累」三連發斷句", "只發語音訊息"], a: 1, h: "Nora 的噴發式斷句是群組特有的節奏。" },
+        { q: "6. 【SOPHiE專屬題】SOPHiE 看到豆奶照片評論「一副就是『你在說甚麼』」，這是形容？", o: ["貓咪對人類的鄙視", "貓咪肚子餓", "貓咪想出去玩"], a: 0, h: "SOPHiE 對豆奶表情的翻譯準確度達 100%。" },
+        { q: "7. Nora 在 23:27 宣告「還沒 11 點半已經睡了 3 次」，SOPHiE 的反應是？", o: ["大笑並給出解釋", "叫她去看醫生", "完全沒看見"], a: 0, h: "SOPHiE 回：「吃飽飽暖暖的就會想睡了」，非常溫馨。" },
+        { q: "8. 關於「阿簡」（簡哥），他在群組裡的地位通常是？", o: ["主要的垃圾話來源", "SOPHiE 故事中的背景家屬", "最高管理員"], a: 1, h: "簡哥是 SOPHiE 精彩生活故事中的靈魂配角。" },
+        { q: "9. Nora 的「搞笑手滑」：想打「皮克敏」卻可能打成？", o: ["屁克敏", "皮皮蝦", "皮克吐"], a: 0, h: "那個手滑的版本簡直是自帶氣味。" },
+        { q: "10. 被誇獎「跟美女一樣」後，Nora 回覆了哪種靈魂台味用語？", o: ["真假", "哪有啦", "蝦米"], a: 2, h: "這兩個字完美捕捉了被驚艷到的驚訝感。" },
+        { q: "11. 豆奶被封為「穴道師」的根本原因是？", o: ["她懂推拿", "她每一腳都精準踩在 Nora 身上", "名字聽起來很專業"], a: 1, h: "Nora 親口認證：「她每一腳都踩在穴道上」。" },
+        { q: "12. SOPHiE 稱呼豆奶為穴道師後，補上的靈魂笑聲是？", o: ["(˶‾᷄ ⁻ ‾᷅˵)", "XDDDDDD", "喵..."], a: 1, h: "SOPHiE 的大笑是群組最強的氛圍劑。" },
+        { q: "13. 在 17:46 那連噴的訊息中，Nora 揭露了什麼震撼情報？", o: ["她要結婚了", "蔡依林有玩皮克敏", "簡哥要請客"], a: 1, h: "這則震撼情報瞬間炸出了所有人考古。" },
+        { q: "14. 家家 (Jia) 喊出的「出運啦～～」波浪號共有幾個？", o: ["1 個", "2 個", "3 個"], a: 1, h: "精確紀錄是「出運啦～～」兩個波浪號。" },
+        { q: "15. 如果有人在群組打錯字，誰最會第一個跳出來狂笑？", o: ["SOPHiE", "豆奶", "家家"], a: 0, h: "SOPHiE 絕對不會錯過任何一個笑點。" },
+        { q: "16. auntiesMetal 創立至今，這段友誼大約維持了多久？", o: ["3 年", "5 年", "超過 7 年"], a: 2, h: "2018 至今，我們已經一起走過了 7 年時光。" },
+        { q: "17. Nora 的貼圖習慣通常代表什麼？", o: ["她生氣了", "她情緒充沛但懶得打字", "她手機沒電"], a: 1, h: "貼圖是 Nora 用來快速傳達豐厚情感的工具。" },
+        { q: "18. 家家說「諾諾帶我們飛(?」，這個「飛」意指？", o: ["出國旅行", "在話題中領路", "真的飛行"], a: 1, h: "代表對 Nora 帶領接觸新奇事物（如皮克敏）的期待。" },
+        { q: "19. 2018/5/12 創立當晚最熱絡的話題圍繞在？", o: ["貓咪與被壓慘況", "明天的早餐", "蔡依林"], a: 0, h: "「被壓」的情緣竟然從第一天維持到了現在。" },
+        { q: "20. 通過這 20 題，代表妳在 auntiesMetal 的地位是？", o: ["見習阿姨", "骨灰級靈魂伴侶", "路過的皮克敏"], a: 1, h: "這是鑑定姐妹愛的最高榮譽。" },
+        { q: "21. 【貓奴考題】Nora 家的蛋堡，在肚子餓時會對主人做什麼？", o: ["把碗推翻", "狂踩 Nora 的肚子", "安靜等待"], a: 1, h: "蛋堡肚子餓時，Nora 就是他的最佳踏板。" },
+        { q: "22. 【重要澄清】家家的「柴柴」與「蛋蛋」是什麼樣的組合？", o: ["一貓一狗", "兩隻都是貓", "兩隻都是狗"], a: 1, h: "雖然名字像狗，但柴柴和蛋蛋都是可愛的貓咪！" },
+        { q: "23. 【2023考古】三年前 Nora 提到在辦公室為了怕人聽見，跟人講話要用？", o: ["氣音", "手語", "寫紙條"], a: 0, h: "Nora 的「氣音對話」考古，讓大家笑到不行。" },
+        { q: "24. 【工作日常】當 Nora 在群組連發「我」「現在」「很氣」時，通常是因為？", o: ["肚子餓", "老闆又要改報告", "貓咪不理她"], a: 1, h: "這是姐妹們同步給予情緒價值的關鍵時刻。" },
+        { q: "25. 【核心靈魂】auntiesMetal 名字中的「Metal」，象徵著我們的友情？", o: ["很重金屬", "鋼鐵般的堅硬", "只是隨便取名"], a: 1, h: "垃圾話就像鋼鐵一樣堅固，這就是我們的 Metal！" }
+    ];
 
-        window.startQuiz = (name) => { state.nickname = name; state.step = 'quiz'; render(); };
-        window.selectOption = (i) => { state.selected = i; state.showAnswer = true; if(i === questions[state.currentQ].a) state.score++; render(); };
-        window.nextQ = () => { if(state.currentQ < questions.length - 1) { state.currentQ++; state.selected = null; state.showAnswer = false; } else { state.step = 'result'; } render(); };
-        window.reset = () => { state = { step: 'landing', currentQ: 0, score: 0, nickname: '', selected: null, showAnswer: false }; render(); };
-        render();
-    </script>
+    let currentQ = 0;
+    let score = 0;
+    let user = "";
+    let canClick = true;
+
+    function start(name) {
+        user = name;
+        document.getElementById('page-start').style.display = 'none';
+        document.getElementById('page-quiz').style.display = 'flex';
+        document.getElementById('id-label').innerText = name + " 的鑑定挑戰";
+        render();
+    }
+
+    function render() {
+        const qData = questions[currentQ];
+        document.getElementById('q-progress').innerText = `第 ${currentQ + 1} 題 / 共 25 題`;
+        document.getElementById('q-title').innerText = qData.q;
+        document.getElementById('result-feedback').style.display = 'none';
+        canClick = true;
+
+        const box = document.getElementById('options-box');
+        box.innerHTML = '';
+        qData.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => select(i);
+            box.appendChild(btn);
+        });
+    }
+
+    function select(idx) {
+        if (!canClick) return;
+        canClick = false;
+        const correctIdx = questions[currentQ].a;
+        const btns = document.querySelectorAll('.btn-option');
+
+        if (idx === correctIdx) {
+            btns[idx].classList.add('is-correct');
+            score++;
+        } else {
+            btns[idx].classList.add('is-wrong');
+            btns[correctIdx].classList.add('is-correct');
+        }
+
+        document.getElementById('q-hint').innerText = "💡考古發現：" + questions[currentQ].h;
+        document.getElementById('result-feedback').style.display = 'block';
+    }
+
+    function goNext() {
+        currentQ++;
+        if (currentQ < questions.length) {
+            render();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('page-quiz').style.display = 'none';
+        document.getElementById('page-result').style.display = 'block';
+        const percent = Math.round((score / 25) * 100);
+        document.getElementById('score-text').innerText = percent + "%";
+        
+        let comment = "";
+        if (percent === 100) comment = "【鋼鐵姐妹王】妳簡直是 auntiesMetal 的守護靈！連三年前的氣音考古都難不倒妳！";
+        else if (percent >= 80) comment = "【高級資深阿姨】超強！妳對大家的生活、貓咪與職場抱怨都瞭若指掌！";
+        else if (percent >= 50) comment = "【合格小阿姨】表現不錯，但看來妳最近可能比較常睡過頭（11點半睡三次？），快去補考古題！";
+        else comment = "【臥底阿簡？】哎呀，妳最近是不是太忙了？這純度需要重新鍛鍊，快去翻翻聊天紀錄！";
+        
+        document.getElementById('comment-box').innerText = comment;
+    }
+</script>
+
 </body>
 </html>
+
